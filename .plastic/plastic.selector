@@ -1,0 +1,4 @@
+repository "warrior-rpg/warrior-rpg@5773938243338@cloud"
+  path "/"
+    br "/main"
+    co "/main"
