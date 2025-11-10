@@ -7,6 +7,7 @@ public class Player : MonoBehaviour
     private Rigidbody2D rb;
 
     [SerializeField] private float moveSpeed = 3.5f;
+    [SerializeField] private float jumpForce = 8f;
 
     private void Awake()
     {
@@ -14,24 +15,26 @@ public class Player : MonoBehaviour
     }
     private void Update()
     {
+        HandleInput();
+        HandleMovement();
+    }
+
+    private void HandleInput()
+    {
         xInput = Input.GetAxisRaw("Horizontal");
         yInput = Input.GetAxisRaw("Vertical");
 
+        if (Input.GetKeyDown(KeyCode.Space))
+            Jump();
+    }
 
+    private void HandleMovement()
+    {
         rb.linearVelocity = new Vector2(xInput * moveSpeed, rb.linearVelocity.y);
+    }
 
-        if (Input.GetKey(KeyCode.Q))
-        {
-            Debug.Log("Q is being pressed");
-        }
-        if (Input.GetKeyDown(KeyCode.P))
-        {
-            Debug.Log("P is pressed");
-        }
-        if (Input.GetKeyUp(KeyCode.V))
-        {
-            Debug.Log("V is released");
-        }
-
+    private void Jump()
+    {
+        rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpForce);
     }
 }
