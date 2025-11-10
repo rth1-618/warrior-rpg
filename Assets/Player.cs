@@ -2,14 +2,24 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
-    public string playerName = "Bob";
-    public int age = 25;
-    public float moveSpeed = 2.5f;
-    public bool gameOver = false;
+    private float xInput;
+    private float yInput;
+    private Rigidbody2D rb;
 
-    private void Start()
+    [SerializeField] private float moveSpeed = 3.5f;
+
+    private void Awake()
     {
-        playerName = "Bob The Hero";
-        Debug.Log(playerName + " - started the game!");
+        rb = GetComponent<Rigidbody2D>();
+    }
+    private void Update()
+    {
+        xInput = Input.GetAxisRaw("Horizontal");
+        yInput = Input.GetAxisRaw("Vertical");
+
+
+        rb.linearVelocity = new Vector2(xInput * moveSpeed, yInput * moveSpeed);
+
+
     }
 }
