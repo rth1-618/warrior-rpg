@@ -11,6 +11,7 @@ public class Player : MonoBehaviour
 
     [SerializeField] private float moveSpeed = 3.5f;
     [SerializeField] private float jumpForce = 8f;
+    [SerializeField] private bool isFacingRight = true;
 
     private void Awake()
     {
@@ -23,12 +24,15 @@ public class Player : MonoBehaviour
         HandleInput();
         HandleMovement();
         HandleAnimation();
+        HandleFlip();
     }
 
     private void HandleAnimation()
     {
         bool isMoving = rb.linearVelocity.x != 0;
+
         anim.SetBool("isMoving", isMoving);
+        
     }
 
     private void HandleInput()
@@ -48,5 +52,25 @@ public class Player : MonoBehaviour
     private void Jump()
     {
         rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpForce);
+    }
+
+    private bool isMovingRight()
+    {
+        if(rb.linearVelocity.x == 0)
+            return isFacingRight;
+        return rb.linearVelocity.x > 0;
+    }
+
+    private void HandleFlip()
+    {
+        if (isMovingRight() && !isFacingRight)
+            Flip();
+        else if(!isMovingRight() && isFacingRight)
+            Flip();
+    }
+    private void Flip()
+    {
+        transform.Rotate(0, 180, 0);
+        isFacingRight = !isFacingRight;
     }
 }
