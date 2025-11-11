@@ -14,6 +14,9 @@ public class Player : MonoBehaviour
 
     [SerializeField] private float moveSpeed = 3.5f;
     [SerializeField] private float jumpForce = 8f;
+    private bool canMove = true;
+    private bool canJump = true;
+
 
 
     [Header("Collision Detection")]
@@ -60,17 +63,38 @@ public class Player : MonoBehaviour
         //yInput = Input.GetAxisRaw("Vertical");
 
         if (Input.GetKeyDown(KeyCode.Space))
-            Jump();
+            TryToJump();
+        if (Input.GetKeyDown(KeyCode.Mouse0))
+            TryToAttack();
     }
+
 
     private void HandleMovement()
     {
-        rb.linearVelocity = new Vector2(xInput * moveSpeed, rb.linearVelocity.y);
+        if (canMove)
+            rb.linearVelocity = new Vector2(xInput * moveSpeed, rb.linearVelocity.y);
+        else
+            rb.linearVelocity = new Vector2(0, rb.linearVelocity.y);
     }
 
-    private void Jump()
+    public void EnableMovementAndJump(bool enable = true)
+    {
+        canMove = enable;
+        canJump = enable;
+
+    }
+    private void TryToAttack()
     {
         if (isGrounded)
+            anim.SetTrigger("attack");
+        
+    }
+
+
+
+    private void TryToJump()
+    {
+        if (isGrounded && canJump)
             rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpForce);
     }
 
