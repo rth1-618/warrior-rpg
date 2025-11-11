@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 
 public class Player : MonoBehaviour
@@ -10,7 +9,7 @@ public class Player : MonoBehaviour
     [Header("Movement Details")]
 
     private float xInput;
-    private float yInput;
+    //private float yInput;
     private bool isFacingRight = true;
 
     [SerializeField] private float moveSpeed = 3.5f;
@@ -48,16 +47,17 @@ public class Player : MonoBehaviour
 
     private void HandleAnimation()
     {
-        bool isMoving = rb.linearVelocity.x != 0;
 
-        anim.SetBool("isMoving", isMoving);
-        
+        anim.SetBool("isGrounded", isGrounded);
+        anim.SetFloat("xVelocity", rb.linearVelocity.x);
+        anim.SetFloat("yVelocity", rb.linearVelocity.y);
+
     }
 
     private void HandleInput()
     {
         xInput = Input.GetAxisRaw("Horizontal");
-        yInput = Input.GetAxisRaw("Vertical");
+        //yInput = Input.GetAxisRaw("Vertical");
 
         if (Input.GetKeyDown(KeyCode.Space))
             Jump();
@@ -70,13 +70,13 @@ public class Player : MonoBehaviour
 
     private void Jump()
     {
-        if (isGrounded) 
+        if (isGrounded)
             rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpForce);
     }
 
     private bool isMovingRight()
     {
-        if(rb.linearVelocity.x == 0)
+        if (rb.linearVelocity.x == 0)
             return isFacingRight;
         return rb.linearVelocity.x > 0;
     }
@@ -85,7 +85,7 @@ public class Player : MonoBehaviour
     {
         if (isMovingRight() && !isFacingRight)
             Flip();
-        else if(!isMovingRight() && isFacingRight)
+        else if (!isMovingRight() && isFacingRight)
             Flip();
     }
     private void Flip()
