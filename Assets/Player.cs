@@ -3,15 +3,28 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
-    private float xInput;
-    private float yInput;
     private Rigidbody2D rb;
 
     private Animator anim;
 
+    [Header("Movement Details")]
+
+    private float xInput;
+    private float yInput;
+    private bool isFacingRight = true;
+
     [SerializeField] private float moveSpeed = 3.5f;
     [SerializeField] private float jumpForce = 8f;
-    [SerializeField] private bool isFacingRight = true;
+
+
+    [Header("Collision Detection")]
+
+    private bool isGrounded;
+
+    [SerializeField] private float groundCheckDistance;
+    [SerializeField] private LayerMask whatIsGround;
+
+
 
     private void Awake()
     {
@@ -21,10 +34,16 @@ public class Player : MonoBehaviour
 
     private void Update()
     {
+        HandleCollisions(); //call before anything
         HandleInput();
         HandleMovement();
         HandleAnimation();
         HandleFlip();
+    }
+
+    private void HandleCollisions()
+    {
+        isGrounded = Physics2D.Raycast(transform.position, Vector2.down, groundCheckDistance, whatIsGround);
     }
 
     private void HandleAnimation()
@@ -51,7 +70,8 @@ public class Player : MonoBehaviour
 
     private void Jump()
     {
-        rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpForce);
+        if (isGrounded) 
+            rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpForce);
     }
 
     private bool isMovingRight()
@@ -72,5 +92,10 @@ public class Player : MonoBehaviour
     {
         transform.Rotate(0, 180, 0);
         isFacingRight = !isFacingRight;
+    }
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.DrawLine(transform.position, transform.position + new Vector3(0, -groundCheckDistance));
     }
 }
